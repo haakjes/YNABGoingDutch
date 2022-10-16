@@ -98,7 +98,7 @@ const BankMapper = function (bankMap, bank) {
     this.getPayee = (line) => {
         let payee = getLine(line, _map.payee);
 
-        // Fallback method for ASN and SNS
+        // Fallback method for ASN, SNS and Triodos
         if (!payee || payee === "") {
             const memo = this.getMemo(line);
 
@@ -107,6 +107,10 @@ const BankMapper = function (bankMap, bank) {
 
                 if (splitMemo.length > 0)
                     return splitMemo[0].trim();
+            } else if (memo.search('\\\\') !== -1) {
+                const splitMemo = memo.split('\\');
+                if (splitMemo.length > 0)
+                    return splitMemo[0].replace(/^CCV\*/, "").trim();
             }
         }
 
